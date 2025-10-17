@@ -56,6 +56,17 @@ return {
         local parts = {}
         table.insert(parts, { get_diagnostic_label() })
         table.insert(parts, { get_git_diff() })
+
+        local branch = vim.b[props.buf].original_branch
+        if branch then
+          table.insert(parts, {
+            " " .. branch .. " ",
+            gui = vim.bo[props.buf].modified and "bold,italic" or "bold",
+            guifg = "#222436",
+            guibg = "#b692f2",
+          })
+        end
+
         table.insert(parts, { (ft_icon or "") .. " ", guifg = ft_color, guibg = "none" })
 
         if parent ~= root and parent ~= "" then
@@ -67,6 +78,33 @@ return {
 
         return parts
       end,
+    })
+
+    vim.api.nvim_create_user_command("Gopen", function(opts)
+      local args = opts.fargs
+      if #args < 2 then
+        vim.notify("Usage: :Gopen <branch> <path>", vim.log.levels.ERROR, { title = "Gopen" })
+        return
+      end
+
+      local branch = args[1]
+      local path = table.concat(vim.list_slice(args, 2), " ")
+      local gedit_cmd = string.format("Gedit %s:%s", branch, path)
+
+      -- Open the file via Gedit
+      vim.cmd(gedit_cmd)
+
+      -- Defer setting b:original_branch slightly to ensure buffer is active
+      vim.schedule(function()
+        if vim.api.nvim_buf_get_name(0):match("^fugitive://") then
+          vim.b.original_branch = branch
+          vim.notify("Gopen → Loaded " .. branch .. ":" .. path, vim.log.levels.INFO, { title = "Gopen" })
+        end
+      end)
+    end, {
+      nargs = "+",
+      complete = "file",
+      desc = "Open file from git branch and save symbolic branch name",
     })
   end,
   -- Optional: Lazy load Incline
