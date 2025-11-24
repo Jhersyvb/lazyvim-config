@@ -22,3 +22,5 @@ keymap.set("n", "<Leader>q", "<cmd>:q<CR>", { desc = "Quit file" })
 keymap.set("n", "<Del>", function()
   vim.cmd("noautocmd write")
 end, { desc = "Save without formatting (noautocmd)" })
+
+keymap.set("v", "<leader>oa", ":sort<CR>", { desc = "Sort alphabetically" })

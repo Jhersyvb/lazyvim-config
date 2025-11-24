@@ -27,6 +27,30 @@ return {
       end,
       desc = "File Browser (Relative to Current File)",
     },
+    {
+      "<leader>sf",
+      function()
+        vim.ui.input({ prompt = "Buscar SOLO en archivos que coincidan con (ej: *_search.php): " }, function(glob)
+          -- ESC → glob == nil → cancelar
+          if glob == nil then
+            return
+          end
+
+          -- Si se deja vacío, también cancela
+          if glob == "" then
+            return
+          end
+
+          require("telescope.builtin").live_grep({
+            prompt_title = "Buscar en: " .. glob,
+            additional_args = function()
+              return { "--glob=" .. glob }
+            end,
+          })
+        end)
+      end,
+      desc = "Live Grep filtrado por archivo",
+    },
   },
   config = function()
     local telescope = require("telescope")

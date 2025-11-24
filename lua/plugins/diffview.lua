@@ -5,8 +5,8 @@ return {
     lazy = true,
   },
   keys = {
-    { "<leader>gi", "<cmd>DiffviewFileHistory<cr>", desc = "Git Diff File History" },
-    { "<leader>gI", "<cmd>DiffviewFileHistory %<cr>", desc = "Git Diff Current File History" },
+    { "<leader>g.", "<cmd>DiffviewFileHistory<cr>", desc = "Git Diff File History" },
+    { "<leader>g:", "<cmd>DiffviewFileHistory %<cr>", desc = "Git Diff Current File History" },
     { "<leader>go", "<cmd>DiffviewOpen<cr>", desc = "Git Diff" },
     {
       "<leader>gO",
