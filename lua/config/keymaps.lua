@@ -22,6 +22,10 @@ keymap.set("n", "<Leader>a", function()
   vim.api.nvim_win_set_cursor(0, pos)
 end, { desc = "Yank whole file to + register without moving cursor" })
 
+keymap.set("n", "<leader>A", function()
+  vim.cmd("%delete _")
+end, { desc = "Delete all lines in file" })
+
 -- Asegurar que la tecla principal exista como grupo (opcional, pero útil)
 -- Esto no mapea ninguna acción directa a <leader>y, sólo ayuda a which-key.
 keymap.set("n", "<leader>y", function() end, { desc = "+Yank" })

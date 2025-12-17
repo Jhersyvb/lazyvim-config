@@ -22,6 +22,31 @@ return {
     },
   },
   config = function()
+    -- 🔑 APLICACIÓN DIRECTA DE KEYMAPS DENTRO DE SETUP
+    local actions = require("diffview.actions")
+    require("diffview").setup({
+      keymaps = {
+        file_panel = {
+          -- 't': Abre el archivo en una nueva pestaña
+          {
+            "n",
+            "t",
+            actions.goto_file_tab,
+            { desc = "Open the file in a new tabpage" }, -- ⬅️ DESCRIPCIÓN PERSONALIZADA
+          },
+        },
+        file_history_panel = {
+          {
+            "n",
+            "t",
+            actions.goto_file_tab,
+            { desc = "Open the file in a new tabpage" }, -- ⬅️ DESCRIPCIÓN PERSONALIZADA
+          },
+        },
+      },
+    })
+    -- FIN DE LA CONFIGURACIÓN DE DIFFVIEW
+
     vim.api.nvim_create_user_command("SafeDiffviewClose", function()
       if vim.fn.getbufinfo({ changed = 1 })[1] ~= nil then
         print("Unsaved changes exist. Save or discard them before closing.")
