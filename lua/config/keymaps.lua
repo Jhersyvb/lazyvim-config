@@ -20,15 +20,18 @@ keymap.set("n", "<Leader>a", function()
   local pos = vim.api.nvim_win_get_cursor(0)
   vim.cmd("%y+")
   vim.api.nvim_win_set_cursor(0, pos)
-end, { desc = "Yank whole file to + register without moving cursor" })
+end, { desc = "Yank entire file to clipboard" })
 
-keymap.set("n", "<leader>A", function()
-  vim.cmd("%delete _")
-end, { desc = "Delete all lines in file" })
+-- keymap.set("n", "<leader>A", function()
+--   vim.cmd("%delete _")
+-- end, { desc = "Delete all lines in file" })
+vim.keymap.set("n", "<leader>D", ":%delete _<CR>", {
+  desc = "Delete entire file content",
+})
 
 -- Asegurar que la tecla principal exista como grupo (opcional, pero útil)
 -- Esto no mapea ninguna acción directa a <leader>y, sólo ayuda a which-key.
-keymap.set("n", "<leader>y", function() end, { desc = "+Yank" })
+-- keymap.set("n", "<leader>y", function() end, { desc = "+Yank" })
 
 -- Save WITHOUT formatting: Ctrl + Delete
 vim.keymap.set({ "n", "i" }, "<C-Del>", function()

@@ -63,6 +63,17 @@ return {
       end)
     end)
 
+    -- Advanced Actions
+    -- Pressing `gaip` will add a cursor on each line of a paragraph.
+    -- Can also be used to add cursor for each line of visual selection.
+    set({ "n", "x" }, "ga", mc.addCursorOperator)
+    -- Add a cursor for all matches of cursor word/selection in the document.
+    set({ "n", "x" }, "<leader>A", mc.matchAllAddCursors)
+    -- Append/insert for each line of visual selections.
+    -- Similar to block selection insertion.
+    set("x", "I", mc.insertVisual)
+    set("x", "A", mc.appendVisual)
+
     -- Customize how cursors look.
     local hl = vim.api.nvim_set_hl
     hl(0, "MultiCursorCursor", { reverse = true })
