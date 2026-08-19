@@ -34,14 +34,9 @@ vim.keymap.set("n", "<leader>D", ":%delete _<CR>", {
 -- keymap.set("n", "<leader>y", function() end, { desc = "+Yank" })
 
 -- Save WITHOUT formatting: Ctrl + Delete
-vim.keymap.set({ "n", "i" }, "<C-Del>", function()
-  -- Exit insert mode if necessary
-  if vim.fn.mode() == "i" then
-    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, false, true), "n", false)
-  end
-
-  -- Save without formatting
+vim.keymap.set({ "n", "i", "v" }, "<C-x>", function()
   vim.cmd("noa w")
-end, { desc = "Save without formatting (leave insert mode)" })
+  vim.cmd("stopinsert")
+end, { desc = "Save without formatting" })
 
 keymap.set("v", "<leader>oa", ":sort<CR>", { desc = "Sort alphabetically" })

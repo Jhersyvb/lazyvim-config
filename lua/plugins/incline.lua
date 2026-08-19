@@ -4,12 +4,33 @@ return {
     local devicons = require("nvim-web-devicons")
     require("incline").setup({
       render = function(props)
-        -- Get the root folder name
-        local root = vim.fn.fnamemodify(vim.fn.getcwd(), ":t")
-        local parent = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ":h:t")
-        local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ":t")
+        local bufname = vim.api.nvim_buf_get_name(props.buf)
+        local filename = vim.fn.fnamemodify(bufname, ":t")
         if filename == "" then
           filename = "[No Name]"
+        end
+
+        -- Ruta del archivo con los directorios ancestros abreviados a su inicial y la
+        -- carpeta padre completa:
+        --   backend/views/electronic-summary/xml_summary.php -> b/v/electronic-summary/
+        local function get_dir_prefix()
+          if bufname == "" then
+            return nil
+          end
+          local relative = vim.fn.fnamemodify(bufname, ":~:.")
+          local segments = vim.split(relative, "/", { trimempty = true })
+          table.remove(segments) -- el nombre del archivo
+          local parent = table.remove(segments)
+          if parent == nil then
+            return nil
+          end
+          for i, segment in ipairs(segments) do
+            -- 2 caracteres en los ocultos, para no quedarnos solo con el punto
+            segments[i] = vim.fn.strcharpart(segment, 0, segment:sub(1, 1) == "." and 2 or 1)
+          end
+          table.insert(segments, parent)
+          local prefix = table.concat(segments, "/") .. "/"
+          return relative:sub(1, 1) == "/" and "/" .. prefix or prefix
         end
         local ft_icon, ft_color = devicons.get_icon_color(filename)
 
@@ -69,8 +90,9 @@ return {
 
         table.insert(parts, { (ft_icon or "") .. " ", guifg = ft_color, guibg = "none" })
 
-        if parent ~= root and parent ~= "" then
-          table.insert(parts, { parent .. "/", guifg = "#888888" })
+        local dir_prefix = get_dir_prefix()
+        if dir_prefix then
+          table.insert(parts, { dir_prefix, guifg = "#888888" })
         end
 
         table.insert(parts, { filename .. " ", gui = vim.bo[props.buf].modified and "bold,italic" or "bold" })

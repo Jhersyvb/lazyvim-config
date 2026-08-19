@@ -5,6 +5,8 @@
 vim.opt.wrap = true
 vim.opt.colorcolumn = "100"
 
+vim.opt.spelllang = { "es", "en" }
+
 -- vim.opt.clipboard:prepend({ "unnamed", "unnamedplus" })
 vim.o.clipboard = "unnamedplus"
 
