@@ -31,12 +31,32 @@ local function goto_definition_in_split()
         return
       end
 
-      vim.cmd(split_cmd())
+      local cmd = split_cmd()
+      local origin_win = vim.api.nvim_get_current_win()
+      local origin_cursor = vim.api.nvim_win_get_cursor(origin_win)
+      vim.cmd(cmd)
+
+      -- LazyVim usa splitkeep = "screen": al partir, el texto en pantalla se queda
+      -- fijo y es el *cursor* el que se mueve para caber en la ventana encogida.
+      -- Por eso hay que devolverlo a su linea antes de recentrar; si no, se centra
+      -- la linea equivocada.
+      vim.api.nvim_win_call(origin_win, function()
+        vim.api.nvim_win_set_cursor(origin_win, origin_cursor)
+        -- solo "split" reduce el alto y descoloca la vista verticalmente
+        if cmd == "split" then
+          vim.cmd("normal! zz")
+        end
+      end)
 
       if #items == 1 then
         local item = items[1]
         local buf = vim.fn.bufadd(item.filename)
         vim.fn.bufload(buf)
+        -- bufadd() crea el buffer *unlisted*. Incline ignora los buffers no
+        -- listados (ignore.unlisted_buffers = true por defecto), asi que sin
+        -- esto el panel nuevo se queda sin winbar con la ruta. Bufferline y
+        -- :bnext tampoco lo verian.
+        vim.bo[buf].buflisted = true
         vim.api.nvim_win_set_buf(0, buf)
         vim.api.nvim_win_set_cursor(0, { item.lnum, math.max(item.col - 1, 0) })
       else

@@ -58,12 +58,35 @@ return {
     local actions = require("telescope.actions")
 
     telescope.setup({
+      defaults = {
+        mappings = {
+          ["i"] = {
+            ["<C-a>"] = actions.toggle_all,
+            ["<C-s>"] = actions.select_horizontal,
+            ["<C-v>"] = actions.select_vertical,
+          },
+          ["n"] = {
+            ["<C-a>"] = actions.toggle_all,
+            ["<C-s>"] = actions.select_horizontal,
+            ["<C-v>"] = actions.select_vertical,
+          },
+        },
+      },
       extensions = {
         file_browser = {
           theme = "dropdown",
           hijack_netrw = true,
           mappings = {
+            ["i"] = {
+              -- mismos atajos que en el resto de pickers de Telescope
+              ["<C-a>"] = fb_actions.toggle_all,
+              ["<C-s>"] = actions.select_horizontal,
+              ["<C-v>"] = actions.select_vertical,
+            },
             ["n"] = {
+              ["<C-a>"] = fb_actions.toggle_all,
+              ["<C-s>"] = actions.select_horizontal,
+              ["<C-v>"] = actions.select_vertical,
               ["N"] = fb_actions.create,
               ["h"] = fb_actions.goto_parent_dir,
               ["/"] = function()

@@ -1,7 +1,25 @@
 return {
   "folke/snacks.nvim",
   lazy = false, -- cargar al inicio
+  init = function()
+    -- WezTerm corre en Windows y no puede leer rutas de WSL (/home/...).
+    -- Sin esto snacks manda solo la RUTA del archivo (kitty t=f) y la terminal
+    -- no encuentra nada -> buffer en blanco.
+    -- Marcar el entorno "ssh" fuerza el envio de los BYTES de la imagen (t=d).
+    vim.env.SNACKS_SSH = "1"
+  end,
   opts = {
+    image = {
+      enabled = true,
+      doc = {
+        -- wezterm no soporta unicode placeholders: inline se desactiva solo
+        -- y cae al render en ventana flotante
+        inline = false,
+        float = true,
+        max_width = 80,
+        max_height = 40,
+      },
+    },
     dashboard = {
       preset = {
         header = [[
